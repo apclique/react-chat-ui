@@ -89,9 +89,18 @@ export default function ContextMenu({ visible, x, y, actions, messageData, onClo
     return null
   }
 
+  // Final filtering by onlyIf if messageData is available
+  const filteredActions = messageData 
+    ? actions.filter(action => !action.onlyIf || action.onlyIf(messageData))
+    : actions
+
+  if (filteredActions.length === 0) {
+    return null
+  }
+
   return (
     <ContextMenuContainer ref={menuRef} visible={visible} x={x} y={y}>
-      {actions.map((action, index) => (
+      {filteredActions.map((action, index) => (
         <ContextMenuItem
           key={index}
           onClick={() => handleActionClick(action)}

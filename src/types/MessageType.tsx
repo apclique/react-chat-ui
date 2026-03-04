@@ -16,6 +16,7 @@ export interface ActionDescription {
   name: string
   handler: (message: MessageType) => void
   onlyFor?: 'incoming' | 'outgoing'
+  onlyIf?: (message: MessageType) => boolean
 }
 
 export interface MessageType  {

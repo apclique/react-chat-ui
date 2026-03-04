@@ -9,8 +9,9 @@ The Message and MessageList components now support custom context menus that app
 ```typescript
 interface ActionDescription {
   name: string
-  handler: () => void
+  handler: (message: MessageType) => void
   onlyFor?: 'incoming' | 'outgoing'  // Optional: filters actions by message type
+  onlyIf?: (message: MessageType) => boolean // Optional: filters actions by message properties
 }
 ```
 
@@ -77,15 +78,17 @@ interface ActionDescription {
 
 ## Action Filtering
 
-- **No `onlyFor` property**: Action appears on both incoming and outgoing messages
+- **No `onlyFor` or `onlyIf` property**: Action appears on all messages
 - **`onlyFor: "outgoing"`**: Action only appears on outgoing messages (user's own messages)
 - **`onlyFor: "incoming"`**: Action only appears on incoming messages (other users' messages)
+- **`onlyIf: (message: MessageType) => boolean`**: Action only appears if the message satisfies the condition (e.g., only for messages with text or only for specific users)
 
 ## Features
 
 - Right-click activation
-- Customizable actions with handlers
-- Message type filtering
+- Customizable actions with handlers (receiving the message object)
+- Message type filtering (`onlyFor`)
+- Message property filtering (`onlyIf`)
 - Proper positioning at cursor location
 - Click outside or Escape key to close
 - Visual feedback: subtle dark overlay on message when context menu is open

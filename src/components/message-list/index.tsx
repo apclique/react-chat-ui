@@ -251,14 +251,15 @@ export default function MessageList({
     const noMessageTextColor = useColorSet("--no-message-text-color")
 
     // Helper function to filter context menu actions by message type
-    const getFilteredActions = (messageType: 'incoming' | 'outgoing'): ActionDescription[] => {
+    const getFilteredActions = (message: MessageType, messageType: 'incoming' | 'outgoing'): ActionDescription[] => {
         if (!contextMenuActions) return []
         
         return contextMenuActions.filter(action => {
-            // If onlyFor is undefined, action applies to both types
-            if (!action.onlyFor) return true
-            // Otherwise, only include if onlyFor matches the message type
-            return action.onlyFor === messageType
+            // If onlyFor is defined, only include if onlyFor matches the message type
+            if (action.onlyFor && action.onlyFor !== messageType) return false
+            // If onlyIf is defined, only include if the message fulfills the condition
+            if (action.onlyIf && !action.onlyIf(message)) return false
+            return true
         })
     }
 
@@ -364,7 +365,7 @@ export default function MessageList({
                                         clusterFirstMessage={firstClusterMessage}
                                         clusterLastMessage={lastClusterMessage}
                                         themeColor={messageThemeColor}
-                                        contextMenuActions={getFilteredActions('outgoing')}
+                                        contextMenuActions={getFilteredActions(message, 'outgoing')}
                                         id={id}
                                         enableMarkdown={enableMarkdown}
                                     />
@@ -386,7 +387,7 @@ export default function MessageList({
                                         text={text}
                                         showTimestamp={showTimestamp}
                                         themeColor={messageThemeColor}
-                                        contextMenuActions={getFilteredActions('incoming')}
+                                        contextMenuActions={getFilteredActions(message, 'incoming')}
                                         id={id}
                                         enableMarkdown={enableMarkdown}
                                     />
