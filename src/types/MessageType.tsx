@@ -15,6 +15,7 @@ export interface AttachedFileType extends Omit<MediaType, 'url'> {
 export interface ActionDescription {
   name: string
   handler: (message: MessageType) => void
+  onClickHandler?: (message: MessageType) => void
   onlyFor?: 'incoming' | 'outgoing'
   onlyIf?: (message: MessageType) => boolean
 }

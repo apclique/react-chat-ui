@@ -80,7 +80,11 @@ export default function ContextMenu({ visible, x, y, actions, messageData, onClo
 
   const handleActionClick = (action: ActionDescription) => {
     if (messageData) {
-      action.handler(messageData)
+      if (action.onClickHandler) {
+        action.onClickHandler(messageData)
+      } else {
+        action.handler(messageData)
+      }
     }
     onClose()
   }

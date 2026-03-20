@@ -43,6 +43,15 @@ export default function MessageWithContextMenu({
     }
   }, [contextMenuActions])
 
+  const handleClick = useCallback(() => {
+    if (contextMenuActions && messageData) {
+      const clickAction = contextMenuActions.find(action => action.onClickHandler)
+      if (clickAction && clickAction.onClickHandler) {
+        clickAction.onClickHandler(messageData)
+      }
+    }
+  }, [contextMenuActions, messageData])
+
   const closeContextMenu = useCallback(() => {
     setContextMenu(prev => ({ ...prev, visible: false }))
   }, [])
@@ -52,6 +61,7 @@ export default function MessageWithContextMenu({
       <MessageWrapper 
         isContextMenuOpen={contextMenu.visible}
         onContextMenu={handleContextMenu}
+        onClick={handleClick}
       >
         {children}
       </MessageWrapper>
